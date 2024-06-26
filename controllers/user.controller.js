@@ -124,7 +124,7 @@ const generateAccessRefreshToken = async (userId) => {
 }
 const logout = async (req, res, next) => {
     try {
-        const user = req.user;
+        const user = req.body;
         await userModel.findByIdAndUpdate(user._id,
             {
                 $set: {
