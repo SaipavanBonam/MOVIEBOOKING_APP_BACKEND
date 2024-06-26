@@ -2,11 +2,9 @@ import { userModel } from "../models/user.model.js";
 import  jwt  from "jsonwebtoken";
 
 
-const verifyJwt =async (req,res,next)=>{
+const AdminverifyJwt =async (req,res,next)=>{
     try {
-
         const token=req.cookies?.refreshToken;
-        console.log(token);
         if(!token)
         {
             return res.status(400).send({message : "Access denied",alert : false});
@@ -21,6 +19,10 @@ const verifyJwt =async (req,res,next)=>{
         {
             return res.status(400).send({message : "wrong token",alert : false});
         }
+        if(!user.isAdmin)
+        {
+            return res.status(400).send({message : "Access denied",alert : false});
+        }
         req.user=user;
         next();
     } catch (error) {
@@ -28,4 +30,4 @@ const verifyJwt =async (req,res,next)=>{
     }
 };
 
-export {verifyJwt};
+export {AdminverifyJwt};

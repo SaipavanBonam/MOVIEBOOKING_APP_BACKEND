@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { login,signup,logout,userpendingorders, adminpendingorders,adminissuedorders,newToken } from "../controllers/user.controller.js";
-
+import { AdminverifyJwt } from '../Middleware/AdminauthMiddleware.js';
+import { verifyJwt } from '../Middleware/auth.middleware.js';
 
 
 const userRouter=Router();

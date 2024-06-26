@@ -87,8 +87,10 @@ const login = async (req, res, next) => {
         const loggedInUser = await userModel.findById(user._id).select("-password");
         const options = {
             httpOnly: true,
-            secure: true
-        }
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict',
+            maxAge: 600000 // 10 minutes
+        };
         return res.status(200)
             .cookie("accessToken", accessToken, options)
             .cookie("refreshToken", refreshToken, options)
@@ -122,7 +124,7 @@ const generateAccessRefreshToken = async (userId) => {
 }
 const logout = async (req, res, next) => {
     try {
-        const user = req.body;
+        const user = req.user;
         await userModel.findByIdAndUpdate(user._id,
             {
                 $set: {
@@ -162,25 +164,12 @@ const userpendingorders = async (req, res, next) => {
 }
 const adminpendingorders = async (req, res, next) => {
     try {
+        
         /**  pending - false , inuse - true */
-        const user = req.body;
-        const date = new Date();
-
-        // Extract the day, month, and year
-        const day = date.getDate();
-        const month = date.getMonth() + 1; // Months are zero-indexed
-        const year = date.getFullYear();
-
-        // Pad single digit day and month with leading zero
-        const formattedDay = day < 10 ? `0${day}` : day;
-        const formattedMonth = month < 10 ? `0${month}` : month;
-
-        // Create the formatted date string
-        const formattedDate = `${formattedDay}-${formattedMonth}-${year}`;
-
+        const details= req.body;
         const data = await bookingModel.find({
             status: "false",
-            Date: formattedDate
+            Date: details.date
         });
         res.status(200).send({ data: data, alert: true });
     } catch (error) {
@@ -190,24 +179,11 @@ const adminpendingorders = async (req, res, next) => {
 const adminissuedorders = async (req, res, next) => {
     try {
         /**  pending - false , inuse - true */
-        const user = req.body;
-        const date = new Date();
-
-        // Extract the day, month, and year
-        const day = date.getDate();
-        const month = date.getMonth() + 1; // Months are zero-indexed
-        const year = date.getFullYear();
-
-        // Pad single digit day and month with leading zero
-        const formattedDay = day < 10 ? `0${day}` : day;
-        const formattedMonth = month < 10 ? `0${month}` : month;
-
-        // Create the formatted date string
-        const formattedDate = `${formattedDay}-${formattedMonth}-${year}`;
+        const details=req.body
 
         const data = await bookingModel.find({
             status: "true",
-            Date: formattedDate
+            Date: details.date
         });
         res.status(200).send({ data: data, alert: true });
     } catch (error) {
