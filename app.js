@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware setup
 app.use(cors({
-  origin: 'http://localhost:3000',
+  origin: 'https://lnmbicycle.netlify.app',
   credentials : true
 }));
 app.use(express.json());
