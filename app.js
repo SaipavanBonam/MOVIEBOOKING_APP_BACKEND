@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware setup
 app.use(cors({
-  origin: 'https://moviebooking-app-backend.onrender.com/',
+  origin: 'https://movieticketbookings.netlify.app/',
   credentials : true
 }));
 app.use(express.json());
