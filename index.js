@@ -12,7 +12,7 @@ connectDB()
     })
 })
 .catch((err) => {
-    console.log("Hi");
+  
     console.log(err.message);
-    console.log("Something went wrong");
+    
 });

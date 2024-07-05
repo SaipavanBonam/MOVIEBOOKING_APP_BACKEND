@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
 const userSchema=mongoose.Schema({
-    name : {
+    username : {
         type : String,
         require : true
     },
@@ -15,12 +15,12 @@ const userSchema=mongoose.Schema({
         type : String,
         require : true
     },
-    rollno:{
+    name:{
         unique:true,
         type : String,
         require : true
     },
-    phoneno:{
+    phone:{
         type:Number,
         require:true
     },
@@ -28,10 +28,6 @@ const userSchema=mongoose.Schema({
         type : String,
         require : true,
         default : ""
-    },
-    isAdmin :{
-        type : Boolean,
-        require : true,
     }
 },{timestamps : true});
 

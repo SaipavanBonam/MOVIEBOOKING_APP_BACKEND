@@ -2,10 +2,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import userRouter from './routes/userroutes.js';
-import cycleRouter from './routes/cycleroutes.js';
-import bookingRouter from './routes/bookingroutes.js';
-import { AdminverifyJwt } from './Middleware/AdminauthMiddleware.js';
-import { verifyJwt } from './Middleware/auth.middleware.js';
+
 
 const app = express();
 
@@ -20,15 +17,15 @@ app.use(cookieParser());
 
 // Routes
 app.use('/user', userRouter);
-app.use('/cycle',cycleRouter);
-app.use('/booking', bookingRouter);
+
+
 
 app.get('/', (req, res) => {
-  res.send('Sriman');
+  res.send('Saipavan');
 });
 
-// Server start
-app.listen(8000, () => {
+const PORT = process.env.PORT ||8000
+app.listen(PORT, () => {
   console.log("Server is running at port 8000");
 });
 

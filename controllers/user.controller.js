@@ -1,35 +1,35 @@
 import { userModel } from '../models/user.model.js';
 
-import { bookingModel } from '../models/booking.model.js';
+
 import { decode } from 'jsonwebtoken';
 import jwt from 'jsonwebtoken'
 
 
 const signup = async (req, res, next) => {
     try {
+        console.log(req.body);
         const user = req.body;
-        if (!user.name || !user.email || !user.password || !user.rollno || !user.phoneno) {
+        if (!user.name || !user.email || !user.password || !user.phone || !user.username) {
             return res.status(400).send('Insufficient details');
         }
         const final_user = {
             name: user.name,
             email: user.email,
-            rollno: user.rollno,
+            username: user.username,
             password: user.password,
-            phoneno: user.phoneno,
-            isAdmin: user.isAdmin
+            phone: user.phone,
         }
         const email = user.email;
         const user_exist = await userModel.findOne({
             $or: [{ email }]
         })
         if (user_exist) {
-            res.status(401).send({ message: 'User with this email already exist', alert: false });
+          return   res.status(401).send({ message: 'User with this email already exist', alert: false });
         }
         const save_status = await userModel.create(final_user);
-        res.status(200).send({ message: 'User Registered Succesfully', alert: true });
+        return  res.status(200).send({ message: 'User Registered Succesfully', alert: true });
     } catch (error) {
-        res.status(401).send({ data: `${error.message}`, alert: false });
+       return res.status(401).send({ data: `${error.message}`, alert: false });
     }
 };
 
@@ -37,15 +37,15 @@ const newToken = async (req, res, next) => {
     try {
         const refreshToken = req.body;
         if (!refreshToken) {
-            return res.status(400).send({ message: "Invalid Token", alert: false });
+           return  res.status(400).send({ message: "Invalid Token", alert: false });
         }
         const decodedtoken = await jwt.verify(refreshToken, processe.env.REFRESH_TOKEN_EXPIRY);
         if (!decodedtoken) {
-            return res.status(400).send({ message: "Unauthorised Request", alert: false });
+           return  res.status(400).send({ message: "Unauthorised Request", alert: false });
         }
         const user = await userModel.findById(decodedtoken._id);
         if (!user) {
-            return res.status(400).send({ message: "user doesn't exist", alert: false });
+          return  res.status(400).send({ message: "user doesn't exist", alert: false });
         }
         const newaccessToken = user.generateAccessToken();
         return res.status(200)
@@ -89,7 +89,7 @@ const login = async (req, res, next) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
-            maxAge: 600000 // 10 minutes
+            maxAge: 600000 
         };
         return res.status(200)
             .cookie("accessToken", accessToken, options)
@@ -151,7 +151,7 @@ const logout = async (req, res, next) => {
 
 const userpendingorders = async (req, res, next) => {
     try {
-        /**  pending - false , inuse - true */
+      
         const user = req.body;
         const data = await bookingModel.find({
             rollno: user.rollno,
@@ -165,7 +165,7 @@ const userpendingorders = async (req, res, next) => {
 const adminpendingorders = async (req, res, next) => {
     try {
         
-        /**  pending - false , inuse - true */
+       
         const details= req.body;
         const data = await bookingModel.find({
             status: "false",
@@ -178,7 +178,7 @@ const adminpendingorders = async (req, res, next) => {
 }
 const adminissuedorders = async (req, res, next) => {
     try {
-        /**  pending - false , inuse - true */
+        
         const details=req.body
 
         const data = await bookingModel.find({
