@@ -8,7 +8,7 @@ const app = express();
 
 // Middleware setup
 app.use(cors({
-  origin: '',
+  origin: 'https://moviebooking-app-backend.onrender.com/',
   credentials : true
 }));
 app.use(express.json());
